@@ -7,7 +7,7 @@ public class Context : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseNpgsql("Host=my_host;Database=my_db;Username=my_user;Password=my_pw");
+        optionsBuilder.UseNpgsql("Host=localhost:5432;Database=Auth;Username=mehrdad;Password=1234");
     }
 
     public DbSet<User> Users { get; set; }

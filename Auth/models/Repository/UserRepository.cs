@@ -18,25 +18,34 @@ public class UserRepository
         return _dbContext.Users.Find(id);
     }
 
-    public User AddUser(User user)
+    public (bool, string) AddUser(User user)
     {
-        _dbContext.Users.Add(user);
-        _dbContext.SaveChanges();
-        return user;
+        try
+        {
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+            return (true, user.Email);
+        }
+        catch
+        {
+            return (false, $"could not create bew user: {user.Email}");
+        }
     }
 
-    public User? EditUser(int id, User user)
+    public User? EditUser(User user)
     {
-        User? existingUser = _dbContext.Users.Find(id);
-        if(user == null){
+        User? existingUser = _dbContext.Users.Find(user.Id);
+        if (user == null)
+        {
             return user;
         }
 
-        if(user.Email != existingUser!.Email){
-         existingUser.Email = user.Email;   
+        if (user.Email != existingUser!.Email)
+        {
+            existingUser.Email = user.Email;
         }
 
-        if(user.PasswordHash != existingUser.PasswordHash)
+        if (user.PasswordHash != existingUser.PasswordHash)
         {
             existingUser.PasswordHash = user.PasswordHash;
         }
