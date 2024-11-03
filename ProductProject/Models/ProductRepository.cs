@@ -46,4 +46,9 @@ public class ProductRepository
     {
         return _context.Products.Find(id);
     }
+
+    public IEnumerable<Product> GetAll()
+    {
+        return _context.Products;
+    }
 }
