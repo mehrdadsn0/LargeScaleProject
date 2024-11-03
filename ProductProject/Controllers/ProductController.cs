@@ -11,9 +11,5 @@ public class ProductController : ControllerBase
     {
     }
 
-    [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
-    {
-
-    }
+ 
 }

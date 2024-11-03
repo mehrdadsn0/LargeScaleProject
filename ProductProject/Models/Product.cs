@@ -1,5 +1,7 @@
 namespace ProductProject.Models;
+using Microsoft.EntityFrameworkCore;
 
+[Index(nameof(Title), IsUnique = true)]
 public class Product
 {
     public int Id { get; set;}
