@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace OrdersProject.Models;
 
 public class OrdersRepository
@@ -9,27 +11,31 @@ public class OrdersRepository
         _context = context;
     }
 
-    public (bool, Order) AddOrder(Order order)
+    public (bool, string) AddOrder(Order order)
     {
         try
         {
             _context.Orders.Add(order);
+            foreach(OrderDetail item in order.OrderDetails){
+                item.OrderId = order.Id;
+                _context.OrderDetails.Add(item);
+            }
             _context.SaveChanges();
-            return (true, order);
+            return (true, "success");
         }
-        catch
+        catch (Exception ex)
         {
-            return (false, order);
+            return (false, ex.Message);
         }
     }
 
     public Order? GetOrder(int id)
     {
-        return _context.Orders.Find(id);
+        return _context.Orders.Include(o => o.OrderDetails).SingleOrDefault(o => o.Id == id);
     }
 
     public IEnumerable<Order> GetOrders()
     {
-        return _context.Orders;
+        return _context.Orders.Include(o => o.OrderDetails).ToList();
     }
 }

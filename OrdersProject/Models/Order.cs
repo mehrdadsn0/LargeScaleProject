@@ -6,9 +6,9 @@ public class Order
     public int UserId { get; set; }
     public DateTime Date { get; set; }
     public decimal TotalPrice { get; set; }
-    public IEnumerable<OrderDetail> OrderDetails { get; set; }
+    public List<OrderDetail> OrderDetails { get; set; }
 
-    public Order()
+    public Order(int userId)
     {
         OrderDetails = new List<OrderDetail>();
     }
