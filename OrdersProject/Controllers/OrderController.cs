@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrdersProject.Models;
 using OrdersProject.Models.Dtos;
+using OrdersProject.Services;
 
 namespace OrdersProject.Controllers;
 
@@ -9,10 +10,12 @@ namespace OrdersProject.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly OrdersRepository _repo;
+    private readonly NotificationEventService _notificationEventService;
 
-    public OrderController(OrdersRepository repo)
+    public OrderController(OrdersRepository repo, NotificationEventService notificationEventService)
     {
         _repo = repo;
+        _notificationEventService = notificationEventService;
     }
 
     [HttpPost]
@@ -30,6 +33,7 @@ public class OrderController : ControllerBase
         var (res, message) = _repo.AddOrder(order);
         if (res)
         {
+            _notificationEventService.SendNotification(content: "order created", number: "0914");
             return Ok(order);
         }
         else

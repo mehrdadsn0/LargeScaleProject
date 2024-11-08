@@ -1,4 +1,5 @@
 using OrdersProject.Models;
+using OrdersProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OrdersContext>();
 builder.Services.AddScoped<OrdersRepository>();
+builder.Services.AddScoped<NotificationEventService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NotificationProject.Models;
 using NotificationProject.Models.Dtos;
+using NotificationProject.Services;
 
 namespace NotificationProject.Controllers;
 
@@ -8,49 +9,37 @@ namespace NotificationProject.Controllers;
 [Route("[controller]")]
 public class NotificationController : ControllerBase
 {
-    private readonly NotificationContext _context;
+    private readonly NotificationService _service;
 
-    public NotificationController(NotificationContext context)
+    public NotificationController(NotificationService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpPost("sendsms")]
     public ActionResult SendSMS(SendSMSDto input)
     {
-        try
+        var (res, message) = _service.SendSMS(input.Number, input.Content);
+        if (res)
         {
-            SMSMessage message = new SMSMessage();
-            message.Number = input.Number;
-            message.Content = input.Content;
-            message.Succes = true;
-            _context.SMSMessages.Add(message);
-            _context.SaveChanges();
-            Console.WriteLine($"sent sms to: {input.Number} ");
             return StatusCode(201);
         }
-        catch(Exception ex)
+        else
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, message);
         }
     }
     [HttpPost("sendemail")]
     public ActionResult SendEmail(SendEmailDto input)
     {
-        try
+        var (res, message) = _service.SendEmail(input.Email, input.Content);
+        if (res)
         {
-            EmailMessage message = new EmailMessage();
-            message.EmailAddress = input.Email;
-            message.Content = input.Content;
-            message.Succes = true;
-            _context.EmailMessages.Add(message);
-            _context.SaveChanges();
-            Console.WriteLine($"sent email to: {input.Email} ");
             return StatusCode(201);
         }
-        catch(Exception ex)
+        else
         {
-            return StatusCode(500, ex.Message);
+            return StatusCode(500, message);
         }
     }
 }
