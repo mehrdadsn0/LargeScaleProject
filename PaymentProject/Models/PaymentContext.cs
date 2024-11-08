@@ -9,4 +9,6 @@ public class PaymentContext : DbContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseNpgsql("Host=localhost:5432;Database=Payments;Username=mehrdad;Password=1234");
     }
+
+    public DbSet<Payment> Payments { get; set; }
 }
