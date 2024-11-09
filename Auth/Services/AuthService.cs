@@ -13,13 +13,17 @@ public class AuthService
         _repo = repo;
     }
 
+    public User? GetUserById(int id)
+    {
+        return _repo.GetUserById(id);
+    }
     public User? GetUserByEmail(string email)
     {
         return _repo.GetUserByEmail(email);
     }
     public (bool, string) SignUp(SignUpRequestDto input)
     {
-        User newUser = new User(email: input.Email, passwordHash: PasswordHashManager.HashPasword(input.Password));
+        User newUser = new User(email: input.Email, passwordHash: PasswordHashManager.HashPasword(input.Password), phoneNumber: input.PhoneNumber);
         return _repo.AddUser(newUser);
     }
 

@@ -33,7 +33,7 @@ public class OrderController : ControllerBase
         var (res, message) = _repo.AddOrder(order);
         if (res)
         {
-            _notificationEventService.SendNotification(content: "order created", number: "0914");
+            _notificationEventService.SendNotification(content: $"order number: {order.Id} created", userId: input.UserId);
             return Ok(order);
         }
         else
@@ -42,7 +42,7 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpGet(":id")]
+    [HttpGet("{id}")]
     public ActionResult<Order> GetOrder(int id)
     {
         Order? order = _repo.GetOrder(id);

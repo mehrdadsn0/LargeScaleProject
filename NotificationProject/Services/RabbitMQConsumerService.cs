@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using NotificationProject.Models.Dtos;
@@ -54,12 +55,40 @@ public class RabbitMQConsumerService : BackgroundService
         await Task.CompletedTask;
     }
 
-    private void ProcessMessage(NotificationEventDto? message)
+    private async void ProcessMessage(NotificationEventDto? message)
     {
         if (message != null)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
+                if (message.Email == null && message.Number == null)
+                {
+                    HttpClient client = new HttpClient()
+                    {
+                        Timeout = TimeSpan.FromSeconds(60)
+                    }; 
+                    client.DefaultRequestHeaders.ConnectionClose = false;
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+                    var url = $"http://localhost:50001/Auth/getusercontact/{message.UserId}";
+                    HttpResponseMessage response;
+                    try
+                    {
+                        response = await client.GetAsync(url);
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        // var jsonMessage = Encoding.UTF8.GetString(responseBody);
+                        var contacts = JsonSerializer.Deserialize<GetUserContactResult>(responseBody);
+                        if (contacts is not null)
+                        {
+                            message.Email = contacts.Email;
+                            message.Number = contacts.Number;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+
+                }
                 var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
                 if (message.Number != null)
                 {

@@ -13,9 +13,10 @@ public class User
     public string PasswordHash { get; set; } = null!;
     public bool IsActive { get; set; }
 
-    public User(string email, string passwordHash)
+    public User(string email, string passwordHash, string phoneNumber)
     {
         Email = email;
+        PhoneNumber = phoneNumber;
         PasswordHash = passwordHash;
     }
 }

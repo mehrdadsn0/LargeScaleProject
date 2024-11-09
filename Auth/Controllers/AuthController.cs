@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Auth.Dtos;
 using Auth.Dtos.Jwt;
+using Auth.Models;
 using Auth.Services;
 using Microsoft.AspNetCore.Mvc;
 using Store.Services.Jwt;
@@ -8,6 +9,7 @@ using Store.Services.Jwt;
 namespace Auth.Controllers;
 
 [ApiController]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
@@ -19,6 +21,25 @@ public class AuthController : ControllerBase
         _authService = service;
         _tokenService = tokenService;
         _refreshTokenService = refreshTokenService;
+    }
+
+    [HttpGet("getusercontact/{id}")]
+    public ActionResult<GetUserContactResult> GetUserContact([FromRoute] int id)
+    {
+        User? user = _authService.GetUserById(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            GetUserContactResult response = new GetUserContactResult()
+            {
+                Number = user.PhoneNumber,
+                Email = user.Email
+            };
+            return Ok(response);
+        }
     }
 
     [HttpPost("signup")]
@@ -33,17 +54,17 @@ public class AuthController : ControllerBase
         return SignIn(new()
         {
             Email = signUpRequestDto.Email,
-            Password = signUpRequestDto.Password
+            Password = signUpRequestDto.Password,
         }, true);
 
     }
 
-    
+
     [HttpPost("signin")]
     public ActionResult SignIn([FromBody] SignInRequestDto signInRequestDto, bool fromSignUp = false)
     {
         var (res, message) = _authService.SignIn(signInRequestDto);
-        
+
         if (!res)
         {
             return BadRequest(message);

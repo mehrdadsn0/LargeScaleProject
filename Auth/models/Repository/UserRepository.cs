@@ -26,9 +26,9 @@ public class UserRepository
             _dbContext.SaveChanges();
             return (true, user.Email);
         }
-        catch
+        catch (Exception ex)
         {
-            return (false, $"could not create bew user: {user.Email}");
+            return (false, $"could not create bew user: {user.Email}. \n {ex.Message}");
         }
     }
 
