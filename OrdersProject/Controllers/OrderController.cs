@@ -21,7 +21,11 @@ public class OrderController : ControllerBase
     [HttpPost]
     public ActionResult<Order> AddOrder(AddOrderDto input)
     {
-        Order order = new Order(input.UserId);
+        if (input.UserId == 0)
+        {
+            return StatusCode(421, "give user id");
+        }
+        Order order = new(input.UserId);
         order.Date = DateTime.UtcNow;
         foreach (var item in input.OrderDetails)
         {
@@ -60,5 +64,42 @@ public class OrderController : ControllerBase
     public ActionResult<IEnumerable<Order>> GetOrders()
     {
         return Ok(_repo.GetOrders());
+    }
+
+    [HttpPost("payorder")]
+    public async Task<ActionResult> PayOrder(int id)
+    {
+        Order? order = _repo.GetOrder(id);
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        HttpClient client = new HttpClient()
+        {
+            Timeout = TimeSpan.FromSeconds(60)
+        };
+        client.DefaultRequestHeaders.ConnectionClose = false;
+        // client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+        string url = $"http://localhost:50004/Payment";
+        HttpResponseMessage response;
+        try
+        {
+            response = await client.PostAsJsonAsync(url, new { OrderId = order.Id, Amount = order.TotalPrice });
+            if (response.IsSuccessStatusCode)
+            {
+                _notificationEventService.SendNotification(content: $"order number: {order.Id} has been payed", userId: order.UserId);
+                return Ok($"order {order.Id} has been payed successfully");
+            }
+            else
+            {
+                _notificationEventService.SendNotification(content: $"order number: {order.Id} payment failed.", userId: order.UserId);
+                return BadRequest($"order {order.Id} payment failed");
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

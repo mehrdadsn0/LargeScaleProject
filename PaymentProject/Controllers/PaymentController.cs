@@ -33,9 +33,27 @@ public class PaymentController : ControllerBase
 
         try
         {
+            Random rnd = new Random();
+            int luck = rnd.Next(1, 5);
+            if (luck != 4)
+            {
+                payment.Success = true;
+            }
+            else
+            {
+                payment.Success = false;
+            }
             _context.Payments.Add(payment);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetPayment), payment.Id);
+            if (payment.Success)
+            {
+                return Ok(payment);
+            }
+            else
+            {
+                return BadRequest(payment);
+
+            }
         }
         catch (Exception e)
         {

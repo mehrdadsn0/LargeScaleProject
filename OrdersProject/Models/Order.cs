@@ -10,6 +10,7 @@ public class Order
 
     public Order(int userId)
     {
+        UserId = userId;
         OrderDetails = new List<OrderDetail>();
     }
 

@@ -31,7 +31,6 @@ public class ProductController : ControllerBase
     public IEnumerable<Product> SearchProduct(string query)
     {
         return _productRepository.Search(query);
-        
     }
 
     [HttpGet]
