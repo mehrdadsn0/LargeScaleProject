@@ -27,6 +27,12 @@ public class ProductController : ControllerBase
             return Ok(product);
         }
     }
+    [HttpGet("search")]
+    public IEnumerable<Product> SearchProduct(string query)
+    {
+        return _productRepository.Search(query);
+        
+    }
 
     [HttpGet]
     public IEnumerable<Product> GetProducts()

@@ -51,4 +51,9 @@ public class ProductRepository
     {
         return _context.Products;
     }
+
+    public IEnumerable<Product> Search(string query)
+    {
+        return _context.Products.Where(p => p.Title.Contains(query)).ToArray();
+    }
 }
