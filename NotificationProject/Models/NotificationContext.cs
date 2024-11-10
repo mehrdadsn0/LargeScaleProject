@@ -7,7 +7,7 @@ public class NotificationContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseNpgsql("Host=localhost:5432;Database=Notification;Username=mehrdad;Password=1234");
+        optionsBuilder.UseNpgsql("Host=database:5432;Database=notification;Username=mehrdad;Password=1234");
     }
 
     public DbSet<SMSMessage> SMSMessages { get; set; }

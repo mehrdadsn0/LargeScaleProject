@@ -23,7 +23,7 @@ public class RabbitMQConsumerService : BackgroundService
     {
         var factory = new ConnectionFactory
         {
-            HostName = "localhost",
+            HostName = "rabbitmq",
             UserName = "guest",
             Password = "guest"
         };
@@ -69,7 +69,7 @@ public class RabbitMQConsumerService : BackgroundService
                     }; 
                     client.DefaultRequestHeaders.ConnectionClose = false;
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
-                    var url = $"http://localhost:50001/Auth/getusercontact/{message.UserId}";
+                    var url = $"http://auth:8080/Auth/getusercontact/{message.UserId}";
                     HttpResponseMessage response;
                     try
                     {

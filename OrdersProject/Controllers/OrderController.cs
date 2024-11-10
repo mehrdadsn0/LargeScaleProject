@@ -81,7 +81,7 @@ public class OrderController : ControllerBase
         };
         client.DefaultRequestHeaders.ConnectionClose = false;
         // client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
-        string url = $"http://localhost:50004/Payment";
+        string url = $"http://payment:8080/Payment";
         HttpResponseMessage response;
         try
         {

@@ -1,0 +1,113 @@
+# version: '3.8'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  database:
+    image: postgres:latest
+    container_name: database
+    environment:
+      - POSTGRES_USER=mehrdad      
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=main     
+      # POSTGRES_USER: mehrdad 
+      # POSTGRES_PASSWORD: 1234
+      # POSTGRES_DB: auth     
+    ports:
+      - "5432:5432"  
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  
+
+  auth:
+    container_name: auth
+    build:
+      context: ./Auth
+      dockerfile: Dockerfile
+    ports:
+      - "8201:8080"
+      - "8301:8081"
+    depends_on:
+      database:
+        condition: service_started
+        restart: true
+      rabbitmq:
+        condition: service_started
+
+  products:
+    container_name: products
+    build:
+      context: ./ProductProject
+      dockerfile: Dockerfile
+    ports:
+      - "8202:8080"
+      - "8302:8081"
+    depends_on:
+      database:
+        condition: service_started
+        restart: true
+      rabbitmq:
+        condition: service_started
+
+  orders:
+    container_name: orders
+    build:
+      context: ./OrdersProject
+      dockerfile: Dockerfile
+    ports:
+      - "8203:8080"
+      - "8303:8081"
+    depends_on:
+      database:
+        condition: service_started
+        restart: true
+      rabbitmq:
+        condition: service_healthy
+
+  payment:
+    container_name: payment
+    build:
+      context: ./PaymentProject
+      dockerfile: Dockerfile
+    ports:
+      - "8204:8080"
+      - "8304:8081"
+    depends_on:
+      database:
+        condition: service_started
+        restart: true
+      rabbitmq:
+        condition: service_healthy
+
+  notification:
+    container_name: notification
+    build:
+      context: ./NotificationProject
+      dockerfile: Dockerfile
+    ports:
+      - "8205:8080"
+      - "8305:8081"
+    depends_on:
+      database:
+        condition: service_started
+        restart: true
+      rabbitmq:
+        condition: service_healthy
+        restart: true
+    
+volumes:
+  postgres_data:
