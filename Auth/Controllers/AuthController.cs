@@ -9,7 +9,7 @@ using Store.Services.Jwt;
 namespace Auth.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("auth")]
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;

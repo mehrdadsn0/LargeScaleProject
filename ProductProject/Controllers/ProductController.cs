@@ -5,7 +5,7 @@ using ProductProject.Models;
 namespace ProductProject.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("product")]
 public class ProductController : ControllerBase
 {
     private readonly ProductRepository _productRepository;

@@ -17,6 +17,8 @@ services:
       retries: 5
       start_period: 5s
       timeout: 5s
+    networks:
+      - LargeScaleProject
 
   database:
     image: postgres:latest
@@ -24,15 +26,39 @@ services:
     environment:
       - POSTGRES_USER=mehrdad      
       - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=main     
-      # POSTGRES_USER: mehrdad 
-      # POSTGRES_PASSWORD: 1234
-      # POSTGRES_DB: auth     
+      - POSTGRES_DB=main        
     ports:
       - "5432:5432"  
     volumes:
       - postgres_data:/var/lib/postgresql/data  
-
+    networks:
+      - LargeScaleProject
+  nginx:
+    image: nginx:latest
+    container_name: nginx_gateway
+    ports:
+      - "8080:80" # Map host port 80 to container port 80
+    volumes:
+      - ./index.html/:/var/www/index.html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - LargeScaleProject
+    depends_on:
+      auth:
+        condition: service_started
+        restart: true
+      products:
+        condition: service_started
+        restart: true
+      orders:
+        condition: service_started
+        restart: true
+      payment:
+        condition: service_started
+        restart: true
+      notification:
+        condition: service_started
+        restart: true
   auth:
     container_name: auth
     build:
@@ -41,6 +67,8 @@ services:
     ports:
       - "8201:8080"
       - "8301:8081"
+    networks:
+      - LargeScaleProject
     depends_on:
       database:
         condition: service_started
@@ -56,6 +84,8 @@ services:
     ports:
       - "8202:8080"
       - "8302:8081"
+    networks:
+      - LargeScaleProject
     depends_on:
       database:
         condition: service_started
@@ -71,6 +101,8 @@ services:
     ports:
       - "8203:8080"
       - "8303:8081"
+    networks:
+      - LargeScaleProject
     depends_on:
       database:
         condition: service_started
@@ -86,6 +118,8 @@ services:
     ports:
       - "8204:8080"
       - "8304:8081"
+    networks:
+      - LargeScaleProject
     depends_on:
       database:
         condition: service_started
@@ -101,6 +135,8 @@ services:
     ports:
       - "8205:8080"
       - "8305:8081"
+    networks:
+      - LargeScaleProject
     depends_on:
       database:
         condition: service_started
@@ -111,3 +147,7 @@ services:
     
 volumes:
   postgres_data:
+
+networks:
+  LargeScaleProject:
+    driver: bridge

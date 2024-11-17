@@ -6,7 +6,7 @@ using NotificationProject.Services;
 namespace NotificationProject.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("notification")]
 public class NotificationController : ControllerBase
 {
     private readonly NotificationService _service;

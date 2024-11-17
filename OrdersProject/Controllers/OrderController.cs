@@ -6,7 +6,7 @@ using OrdersProject.Services;
 namespace OrdersProject.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("order")]
 public class OrderController : ControllerBase
 {
     private readonly OrdersRepository _repo;

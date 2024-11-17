@@ -5,7 +5,7 @@ using PaymentProject.Models.Dtos;
 namespace PaymentProject.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("payment")]
 public class PaymentController : ControllerBase
 {
     private readonly PaymentContext _context;
