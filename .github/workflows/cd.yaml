@@ -1,0 +1,59 @@
+name: Build and Push Docker Images for Multiple Projects
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project:
+          - name: Auth
+            path: ./Auth/Auth.csproj
+            dockerfile: ./src/Auth/Dockerfile
+            image: mehrdadsn/Auth
+          - name: ProductProject
+            path: ./ProductProject/ProductProject.csproj
+            dockerfile: ./ProductProject
+            image: mehrdadsn/ProductProject
+          - name: OrdersProject
+            path: ./OrdersProject/OrdersProject.csproj
+            dockerfile: ./OrdersProject/Dockerfile
+            image: mehrdadsn/OrdersProject
+          - name: PaymentProject
+            path: ./PaymentProject/PaymentProject.csproj
+            dockerfile: ./PaymentProject/Dockerfile
+            image: mehrdadsn/PaymentProject
+          - name: NotificationProject
+            path: ./NotificationProject/NotificationProject.csproj
+            dockerfile: ./NotificationProject/Dockerfile
+            image: mehrdadsn/NotificationProject
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker Buildx (if needed for multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 4: Build and push Docker image for each project
+      - name: Build and Push Docker Image for ${{ matrix.project.name }}
+        run: |
+          docker build -f ${{ matrix.project.dockerfile }} -t ${{ matrix.project.image }} .
+          docker push ${{ matrix.project.image }}
