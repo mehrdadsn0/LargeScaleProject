@@ -16,23 +16,23 @@ jobs:
       matrix:
         project:
           - name: Auth
-            path: ./Auth/Auth.csproj
+            path: ./Auth/
             dockerfile: ./Auth/Dockerfile
             image: mehrdadsn/auth
           - name: ProductProject
-            path: ./ProductProject/roductProject.csproj
+            path: ./ProductProject/
             dockerfile: ./ProductProject/Dockerfile
             image: mehrdadsn/product
           - name: OrdersProject
-            path: ./OrdersProject/OrdersProject.csproj
+            path: ./OrdersProject/
             dockerfile: ./OrdersProject/Dockerfile
             image: mehrdadsn/order
           - name: PaymentProject
-            path: ./PaymentProject/PaymentProject.csproj
+            path: ./PaymentProject/
             dockerfile: ./PaymentProject/Dockerfile
             image: mehrdadsn/payment
           - name: NotificationProject
-            path: ./NotificationProject/NotificationProject.csproj
+            path: ./NotificationProject/
             dockerfile: ./NotificationProject/Dockerfile
             image: mehrdadsn/notification
 
