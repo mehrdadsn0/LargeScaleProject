@@ -14,7 +14,7 @@ public class ProductController : ControllerBase
         _productRepository = productRepository;
     }
 
-    [HttpGet(":id")]
+    [HttpGet("{id:int}")]
     public ActionResult<Product> GetProduct(int id)
     {
         Product? product = _productRepository.GetById(id);
@@ -34,12 +34,13 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    
     public IEnumerable<Product> GetProducts()
     {
         return _productRepository.GetAll();
     }
 
-    [HttpPost]
+    [HttpPost("addproduct")]
     public ActionResult<Product> AddProduct(AddProductDto input)
     {
         Product newProduct = new(input.Title, input.Price);
@@ -54,7 +55,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPut("editproduct")]
     public ActionResult<Product> EditProduct(Product input)
     {
         var (res, product) = _productRepository.Edit(input);

@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Auth.Dtos;
 using Auth.Dtos.Jwt;
@@ -23,6 +24,8 @@ public class AuthController : ControllerBase
         _refreshTokenService = refreshTokenService;
     }
 
+    
+
     [HttpGet("getusercontact/{id}")]
     public ActionResult<GetUserContactResult> GetUserContact([FromRoute] int id)
     {
@@ -40,6 +43,27 @@ public class AuthController : ControllerBase
             };
             return Ok(response);
         }
+    }
+
+    [HttpGet("getuserbytoken/{token}")]
+    public ActionResult<GetUserByTokenResult> GetUserByToken(string token)
+    {
+
+        // Create an instance of JwtSecurityTokenHandler
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        // Read the token (does not validate signature)
+        var jwtToken = tokenHandler.ReadJwtToken(token);
+
+        // Extract claims from the payload
+        var claims = jwtToken.Claims;
+
+        return new GetUserByTokenResult()
+        {
+            Id = int.Parse(claims.FirstOrDefault(c => c.Type == "Id")!.Value),
+            Email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value,
+            Phone = claims.FirstOrDefault(c => c.Type == "Phone")!.Value
+        };
     }
 
     [HttpPost("signup")]
@@ -64,6 +88,7 @@ public class AuthController : ControllerBase
     public ActionResult SignIn([FromBody] SignInRequestDto signInRequestDto, bool fromSignUp = false)
     {
         var (res, message) = _authService.SignIn(signInRequestDto);
+        var user = _authService.GetUserByEmail(signInRequestDto.Email);
 
         if (!res)
         {
@@ -74,6 +99,8 @@ public class AuthController : ControllerBase
         {
             var claims = new List<Claim>
             {
+                new Claim("Id", user!.Id.ToString()),
+                new Claim("Phone", user!.PhoneNumber),
                 new Claim(ClaimTypes.Email, signInRequestDto.Email),
             };
             var accessToken = _tokenService.GenerateAccessToken(claims);

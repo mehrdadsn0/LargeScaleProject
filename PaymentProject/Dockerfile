@@ -2,7 +2,7 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
+# USER app
 WORKDIR /app
 EXPOSE 8204
 EXPOSE 8304
@@ -10,18 +10,18 @@ EXPOSE 8304
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["PaymentProject.csproj", "."]
-RUN dotnet restore "./PaymentProject.csproj"
+EXPOSE 8204
+EXPOSE 8304
+COPY [".", "."]
+RUN dotnet restore
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./PaymentProject.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build  -c Release -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./PaymentProject.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c Release -o /app/publish 
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
