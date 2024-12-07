@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: product-dep
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: products
+  template:
+    metadata:
+      labels:
+        app: products
+    spec:
+      containers:
+        - name: products
+          image: products:latest
+          imagePullPolicy: Never
+          env:
+          - name: CONNECTION_STRING
+            value: Host=postgres-srv:5432;Database=products;Username=mehrdad;Password=1234
