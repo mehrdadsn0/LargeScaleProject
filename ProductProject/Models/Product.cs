@@ -8,6 +8,10 @@ public class Product
     public string Title { get; set; } = null!;
     public decimal Price { get; set; }
 
+    public Product()
+    {
+
+    }
     public Product(string title, decimal price)
     {
         Title = title;
