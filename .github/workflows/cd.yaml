@@ -1,4 +1,4 @@
-name: Build and Push Docker Images for Multiple Projects
+name: Build and Push Docker Images 
 
 on:
   push:
