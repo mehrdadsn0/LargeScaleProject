@@ -18,23 +18,23 @@ jobs:
           - name: Auth
             path: ./Auth/Auth.csproj
             dockerfile: ./src/Auth/Dockerfile
-            image: mehrdadsn/Auth
+            image: mehrdadsn/auth
           - name: ProductProject
-            path: ./ProductProject/ProductProject.csproj
+            path: ./ProductProject/roductProject.csproj
             dockerfile: ./ProductProject
-            image: mehrdadsn/ProductProject
+            image: mehrdadsn/product
           - name: OrdersProject
             path: ./OrdersProject/OrdersProject.csproj
             dockerfile: ./OrdersProject/Dockerfile
-            image: mehrdadsn/OrdersProject
+            image: mehrdadsn/order
           - name: PaymentProject
             path: ./PaymentProject/PaymentProject.csproj
             dockerfile: ./PaymentProject/Dockerfile
-            image: mehrdadsn/PaymentProject
+            image: mehrdadsn/payment
           - name: NotificationProject
             path: ./NotificationProject/NotificationProject.csproj
             dockerfile: ./NotificationProject/Dockerfile
-            image: mehrdadsn/NotificationProject
+            image: mehrdadsn/notification
 
     steps:
       # Step 1: Checkout code
