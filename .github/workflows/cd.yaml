@@ -55,5 +55,5 @@ jobs:
       # Step 4: Build and push Docker image for each project
       - name: Build and Push Docker Image for ${{ matrix.project.name }}
         run: |
-          docker build -f ${{ matrix.project.dockerfile }} -t ${{ matrix.project.image }} .
+          docker build -f ${{ matrix.project.dockerfile }} -t ${{ matrix.project.image }} ${{ matrix.project.path }}
           docker push ${{ matrix.project.image }}
