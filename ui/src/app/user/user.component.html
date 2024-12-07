@@ -1,0 +1,10 @@
+<h2>sign up</h2>
+<input type="text" [(ngModel)]="signUpDto.Email" placeholder="Email">
+<input type="text" [(ngModel)]="signUpDto.PhoneNumber" placeholder="PhoneNumber">
+<input type="text" [(ngModel)]="signUpDto.Password" placeholder="Password">
+<button (click)="signup()">sign up</button>
+<hr>
+<h2>signin</h2>
+<input type="text" [(ngModel)]="signInDto.Email" placeholder="Email">
+<input type="text" [(ngModel)]="signInDto.Password" placeholder="Password">
+<button (click)="signin()">sign in</button>

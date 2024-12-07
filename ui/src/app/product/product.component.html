@@ -1,0 +1,63 @@
+<h3>add product:</h3>
+
+<input type="text" [(ngModel)]="addProductDto.Title" placeholder="Title">
+<input type="number" [(ngModel)]="addProductDto.Price" placeholder="Price">
+<button (click)="addProduct()">add</button>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let p of products">
+            <td>{{p.id}}</td>
+            <td>{{p.title}}</td>
+            <td>{{p.price}}</td>
+            <td><button (click)="addToCart(p.id!, p.price!)">Add to Cart</button><td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+<h3>Cart</h3>
+<table>
+    <thead>
+        <tr>
+            <th>title</th>
+            <th>count</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let d of addOrderDto.orderDetails">
+            <td>{{d.productTitle}}</td>
+            <td>{{d.count}}</td>
+            <td>{{d.productPrice }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<button (click)="addOrder()">add order</button>
+
+<hr>
+<h3>orders</h3>
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>totalPrice</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let o of orders">
+            <td>{{o.id}}</td>
+            <td>{{o.totalPrice}}</td>
+            <td><button (click)="payOrder(o.id!, o.totalPrice!)">Pay</button></td>
+        </tr>
+    </tbody>
+</table>
+
