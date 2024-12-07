@@ -1,0 +1,42 @@
+name: Build and Test Specific Projects
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      # Step 3: Build and Test Project Auth
+      - name: Build Auth
+        run: dotnet build ./Auth/Auth.csproj --configuration Release
+
+      - name: Build ProductProject
+        run: dotnet build ./ProductProject/ProductProject.csproj --configuration Release
+
+      - name: Test ProductProject
+        run: dotnet test ./ProductProject --configuration Release
+
+      - name: Build OrdersProject
+        run: dotnet build ./OrdersProject/OrdersProject.csproj --configuration Release
+
+      - name: Build PaymentProject
+        run: dotnet build ./PaymentProject/PaymentProject.csproj --configuration Release
+
+      - name: Build NotificationProject
+        run: dotnet build ./NotificationProject/NotificationProject.csproj --configuration Release
