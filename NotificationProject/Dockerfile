@@ -12,9 +12,8 @@ EXPOSE 8305
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["NotificationProject.csproj", "."]
-RUN dotnet restore "./NotificationProject.csproj"
 COPY . .
+RUN dotnet restore "./NotificationProject.csproj"
 WORKDIR "/src/."
 RUN dotnet build "./NotificationProject.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

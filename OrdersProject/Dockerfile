@@ -12,9 +12,8 @@ EXPOSE 8303
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["OrdersProject.csproj", "."]
-RUN dotnet restore "./OrdersProject.csproj"
 COPY . .
+RUN dotnet restore
 WORKDIR "/src/."
 RUN dotnet build "./OrdersProject.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

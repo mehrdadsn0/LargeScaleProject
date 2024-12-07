@@ -17,11 +17,11 @@ jobs:
         project:
           - name: Auth
             path: ./Auth/Auth.csproj
-            dockerfile: ./src/Auth/Dockerfile
+            dockerfile: ./Auth/Dockerfile
             image: mehrdadsn/auth
           - name: ProductProject
             path: ./ProductProject/roductProject.csproj
-            dockerfile: ./ProductProject
+            dockerfile: ./ProductProject/Dockerfile
             image: mehrdadsn/product
           - name: OrdersProject
             path: ./OrdersProject/OrdersProject.csproj

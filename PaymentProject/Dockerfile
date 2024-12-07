@@ -13,9 +13,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 EXPOSE 8204
 EXPOSE 8304
-COPY [".", "."]
-RUN dotnet restore
 COPY . .
+RUN dotnet restore
 WORKDIR "/src/."
 RUN dotnet build  -c Release -o /app/build
 
